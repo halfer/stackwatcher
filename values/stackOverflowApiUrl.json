@@ -1,0 +1,6 @@
+{
+    "id": "5c574d7ba6465f27e5e9030f",
+    "name": "stackOverflowApiUrl",
+    "value": "https://api.stackexchange.com/2.2/search/excerpts",
+    "private": false
+}
