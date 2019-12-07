@@ -1,4 +1,4 @@
-exports = function(query){
+exports = function(query, userId) {
   const http = context.services.get("HTTP");
   const urlBase = context.values.get("stackOverflowApiUrl");
   const options = [
@@ -6,9 +6,13 @@ exports = function(query){
     'sort=activity',
     'site=stackoverflow',
     'q=' + encodeURIComponent(query),
-    'user=40933',
     'filter=!--uPQ.wqQ0zW'
   ];
+
+  // Only add a user filter if it is supplied as a param
+  if (typeof userId !== 'undefined') {
+    options.push('user=' + userId);
+  }
 
   return http
     .get({ url: urlBase + '?' + options.join('&') })
