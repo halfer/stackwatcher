@@ -2,19 +2,9 @@ const callApi = require('./_source');
 
 test('Simple fetch with no user', () => {
 
-    // Mock the service getter
-    const promise = { then: jest.fn(response => 123) };
-    const httpService = { get: jest.fn(options => promise) };
-    const serviceGetter = jest.fn(service => httpService);
-
-    // Mock the value getter
-    const valueGetter = jest.fn(keyName => 'https://example.com/2.2/search/excerpts');
-
     // This inserts the service and value getters globally
-    global.context = {
-        services: { get: serviceGetter },
-        values: { get: valueGetter }
-    };
+    const httpService = getHttpService();
+    global.context = getDefaultContext(httpService);
 
     expect(callApi('hello')).toBe(123);
 
@@ -27,6 +17,7 @@ test('Simple fetch with no user', () => {
 });
 
 test('Simple fetch with user', () => {
+
     // This inserts the service and value getters globally
     const httpService = getHttpService();
     global.context = getDefaultContext(httpService);
