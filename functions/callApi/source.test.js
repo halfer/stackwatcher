@@ -19,34 +19,44 @@ test('Simple fetch with no user', () => {
     expect(callApi('hello')).toBe(123);
 
     // Check the mocks are behaving as expected
-    expect(valueGetter.mock.calls[0][0]).toBe('stackOverflowApiUrl');
-    expect(serviceGetter.mock.calls[0][0]).toBe('HTTP');
+    expect(global.context.values.get.mock.calls[0][0]).toBe('stackOverflowApiUrl');
+    expect(global.context.services.get.mock.calls[0][0]).toBe('HTTP');
     expect(httpService.get.mock.calls[0][0].url).toBe(
         'https://example.com/2.2/search/excerpts?order=desc&sort=activity&site=stackoverflow&q=hello&filter=!--uPQ.wqQ0zW'
     );
 });
 
 test('Simple fetch with user', () => {
+    // This inserts the service and value getters globally
+    const httpService = getHttpService();
+    global.context = getDefaultContext(httpService);
+
+    expect(callApi('hello', 54321)).toBe(123);
+
+    // Check the mocks are behaving as expected
+    expect(global.context.values.get.mock.calls[0][0]).toBe('stackOverflowApiUrl');
+    expect(global.context.services.get.mock.calls[0][0]).toBe('HTTP');
+    expect(httpService.get.mock.calls[0][0].url).toBe(
+        'https://example.com/2.2/search/excerpts?order=desc&sort=activity&site=stackoverflow&q=hello&filter=!--uPQ.wqQ0zW&user=54321'
+    );
+});
+
+function getDefaultContext(httpService) {
     // Mock the service getter
-    const promise = { then: jest.fn(response => 123) };
-    const httpService = { get: jest.fn(options => promise) };
     const serviceGetter = jest.fn(service => httpService);
 
     // Mock the value getter
     const valueGetter = jest.fn(keyName => 'https://example.com/2.2/search/excerpts');
 
-    // This inserts the service and value getters globally
-    global.context = {
+    return {
         services: { get: serviceGetter },
         values: { get: valueGetter }
     };
+}
 
-    expect(callApi('hello', 54321)).toBe(123);
+function getHttpService() {
+    const promise = { then: jest.fn(response => 123) };
+    const httpService = { get: jest.fn(options => promise) };
 
-    // Check the mocks are behaving as expected
-    expect(valueGetter.mock.calls[0][0]).toBe('stackOverflowApiUrl');
-    expect(serviceGetter.mock.calls[0][0]).toBe('HTTP');
-    expect(httpService.get.mock.calls[0][0].url).toBe(
-        'https://example.com/2.2/search/excerpts?order=desc&sort=activity&site=stackoverflow&q=hello&filter=!--uPQ.wqQ0zW&user=54321'
-    );
-});
+    return httpService;
+}
