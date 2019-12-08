@@ -32,6 +32,22 @@ test('Simple fetch with user', () => {
     );
 });
 
+test('Simple fetch with multiple words', () => {
+
+    // This inserts the service and value getters globally
+    const httpService = getHttpService();
+    global.context = getDefaultContext(httpService);
+
+    expect(callApi('hello world')).toBe(123);
+
+    // Check the mocks are behaving as expected
+    expect(global.context.values.get.mock.calls[0][0]).toBe('stackOverflowApiUrl');
+    expect(global.context.services.get.mock.calls[0][0]).toBe('HTTP');
+    expect(httpService.get.mock.calls[0][0].url).toBe(
+        'https://example.com/2.2/search/excerpts?order=desc&sort=activity&site=stackoverflow&q=hello%20world&filter=!--uPQ.wqQ0zW'
+    );
+});
+
 function getDefaultContext(httpService) {
     // Mock the service getter
     const serviceGetter = jest.fn(service => httpService);
