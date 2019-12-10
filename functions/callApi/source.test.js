@@ -1,12 +1,12 @@
 const callApi = require('./_source');
 
-test('Simple fetch with no user', () => {
+test('Simple fetch with no user', async () => {
 
     // This inserts the service and value getters globally
     const httpService = getHttpService();
     global.context = getDefaultContext(httpService);
 
-    expect(callApi('hello')).toBe(123);
+    expect(await callApi('hello')).toBe(123);
 
     // Check the mocks are behaving as expected
     expect(global.context.values.get.mock.calls[0][0]).toBe('stackOverflowApiUrl');
@@ -16,13 +16,13 @@ test('Simple fetch with no user', () => {
     );
 });
 
-test('Simple fetch with user', () => {
+test('Simple fetch with user', async () => {
 
     // This inserts the service and value getters globally
     const httpService = getHttpService();
     global.context = getDefaultContext(httpService);
 
-    expect(callApi('hello', 54321)).toBe(123);
+    expect(await callApi('hello', 54321)).toBe(123);
 
     // Check the mocks are behaving as expected
     expect(global.context.values.get.mock.calls[0][0]).toBe('stackOverflowApiUrl');
@@ -32,13 +32,13 @@ test('Simple fetch with user', () => {
     );
 });
 
-test('Simple fetch with multiple words', () => {
+test('Simple fetch with multiple words', async () => {
 
     // This inserts the service and value getters globally
     const httpService = getHttpService();
     global.context = getDefaultContext(httpService);
 
-    expect(callApi('hello world')).toBe(123);
+    expect(await callApi('hello world')).toBe(123);
 
     // Check the mocks are behaving as expected
     expect(global.context.values.get.mock.calls[0][0]).toBe('stackOverflowApiUrl');
@@ -62,7 +62,16 @@ function getDefaultContext(httpService) {
 }
 
 function getHttpService() {
-    const promise = { then: jest.fn(response => 123) };
+    const textFunc = function() {
+        return '{"total": 123}';
+    };
+    const promise = new Promise(function(resolve, reject) {
+        resolve({
+            body: {
+                text: textFunc
+            }
+        });
+    });
     const httpService = { get: jest.fn(options => promise) };
 
     return httpService;

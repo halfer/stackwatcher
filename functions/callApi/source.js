@@ -1,4 +1,4 @@
-exports = function(query, userId) {
+exports = async function(query, userId) {
   const http = context.services.get("HTTP");
   const urlBase = context.values.get("stackOverflowApiUrl");
   const options = [
@@ -14,11 +14,11 @@ exports = function(query, userId) {
     options.push('user=' + userId);
   }
 
-  return http
-    .get({ url: urlBase + '?' + options.join('&') })
-    .then(response => {
-      // The response body is encoded as raw BSON.Binary. Parse it to JSON.
-      const ejson_body = EJSON.parse(response.body.text());
-      return ejson_body.total;
-    });
+  // Get a response using async await, so that parsing is tested too
+  let response = await http.get({ url: urlBase + '?' + options.join('&') });
+
+  // Decode the response body
+  const jsonText = JSON.parse(response.body.text());
+
+  return jsonText.total;
 };
