@@ -1,4 +1,5 @@
 const {MongoClient} = require('mongodb');
+const getNextQuery = require('./_source');
 
 describe('insert', () => {
     let connection;
@@ -16,14 +17,37 @@ describe('insert', () => {
         await db.close();
     });
 
-    it('should insert a doc into collection', async () => {
-        // FIXME this is just a demo to show Mongo is working
-        const users = db.collection('users');
+    it('shows an empty query set will return nothing', async () => {
+        global.context = getStitchContext();
 
-        const mockUser = {_id: 'some-user-id', name: 'John'};
-        await users.insertOne(mockUser);
-
-        const insertedUser = await users.findOne({_id: 'some-user-id'});
-        expect(insertedUser).toEqual(mockUser);
+        expect(await getNextQuery()).toBe(null);
     });
+
+    it('shows a recently run query will not be run', async () => {
+        global.context = getStitchContext();
+
+        // Insert a recently run query
+        let queries = db.collection('queries');
+        await queries.insertOne({
+            "user_id": 1,
+            "phrase": 'hello',
+            "last_run_at": new Date()
+        });
+
+        expect(await getNextQuery()).toBe(null);
+    });
+
+    function getStitchContext() {
+        return {
+            services: {
+                get: function(serviceName) {
+                    return {
+                        db: function(databaseName) {
+                            return db;
+                        }
+                    }
+                }
+            }
+        };
+    }
 });

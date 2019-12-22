@@ -21,10 +21,11 @@ exports = async function() {
     const sort = {
         "last_run_at": -1
     };
-    let queryDoc = await queriesCollection
+    let queryList = await queriesCollection
         .find(filter, projection)
         .sort(sort)
-        .limit(1);
+        .limit(1)
+        .toArray();
 
-    return queryDoc;
+    return queryList.length ? queryList[0] : null;
 };
