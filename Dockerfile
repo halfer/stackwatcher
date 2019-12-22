@@ -14,6 +14,6 @@ WORKDIR /root
 
 # Install runtime and test tools
 RUN apk add nodejs yarn
-RUN yarn global add jest
+RUN yarn global add jest @shelf/jest-mongodb mongodb-memory-server
 
 CMD ["/bin/sh"]
