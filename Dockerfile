@@ -18,6 +18,6 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 
 # Install runtime and test tools
 RUN apt-get update && apt-get install -y nodejs yarn --no-install-recommends yarn
-#RUN yarn global add jest @shelf/jest-mongodb mongodb-memory-server
+RUN yarn add jest @shelf/jest-mongodb mongodb-memory-server
 
 CMD ["/bin/sh"]
