@@ -7,6 +7,8 @@
 # Shell:
 #
 #     docker run -v `pwd`:/root -it stackwatcher
+#
+# Currently does not seem to run in Alpine, so using Ubuntu for now.
 
 FROM ubuntu:18.04
 

@@ -4,3 +4,7 @@ nbproject/
 
 # Ignore generated source files
 _source.js
+
+# Ignore dependencies
+node_modules/
+
