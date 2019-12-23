@@ -1,13 +1,5 @@
 # Local environment for this Mongo stitch project
 #
-# Build:
-#
-#     docker build -t stackwatcher .
-#
-# Shell:
-#
-#     docker run -v `pwd`:/root -it stackwatcher
-#
 # Currently does not seem to run in Alpine, so using Ubuntu for now.
 
 FROM ubuntu:18.04
