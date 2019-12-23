@@ -6,8 +6,10 @@ describe('insert', () => {
     let db;
 
     beforeAll(async () => {
+        // See this URL for unified topology: https://stackoverflow.com/a/57899638
         connection = await MongoClient.connect(global.__MONGO_URI__, {
             useNewUrlParser: true,
+            useUnifiedTopology: true
         });
         db = await connection.db(global.__MONGO_DB_NAME__);
     });
