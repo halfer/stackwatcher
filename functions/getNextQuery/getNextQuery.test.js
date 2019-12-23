@@ -49,7 +49,7 @@ describe('insert', () => {
         expect(queryObject.phrase).toBe('hello');
     });
 
-    it('shows query that has not been run will be run', async () => {
+    it('shows query that needs running will be run', async () => {
         global.context = getStitchContext();
 
         // Calculate an "old" time
