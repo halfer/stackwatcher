@@ -8,3 +8,5 @@ _source.js
 # Ignore dependencies
 node_modules/
 
+# Misc
+.bash_history
