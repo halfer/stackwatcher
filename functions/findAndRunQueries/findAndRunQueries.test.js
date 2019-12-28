@@ -33,10 +33,7 @@ describe('Some tests for findAndRunQueries', () => {
     test('One query needs to be run', async () => {
         produceNNextQueries(1);
         produceNSuccessfulQueries(1);
-
-        setGlobalMock('markQueryAsRun', (queryId) => {
-            // Does not need to return anything
-        });
+        mockQueryMarker();
 
         await findAndRunQueries(0);
 
@@ -55,10 +52,7 @@ describe('Some tests for findAndRunQueries', () => {
     test('Two queries need to be run', async () => {
         produceNNextQueries(2);
         produceNSuccessfulQueries(2);
-
-        setGlobalMock('markQueryAsRun', (queryId) => {
-            // Does not need to return anything
-        });
+        mockQueryMarker();
 
         await findAndRunQueries(0);
 
@@ -103,6 +97,12 @@ describe('Some tests for findAndRunQueries', () => {
         let callCount = 0;
         setGlobalMock('runQuery', (query) => {
             return callCount++ < n;
+        });
+    }
+
+    function mockQueryMarker() {
+        setGlobalMock('markQueryAsRun', (queryId) => {
+            // Does not need to return anything
         });
     }
 
