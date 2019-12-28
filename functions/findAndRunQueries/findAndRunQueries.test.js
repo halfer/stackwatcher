@@ -71,8 +71,24 @@ describe('Some tests for findAndRunQueries', () => {
     });
 
     test('Two queries, one fails', async () => {
-        // @todo Ensure runQuery is called twice
-        // @todo Ensure markQueryAsRun is called once
+        produceNNextQueries(2);
+        produceNSuccessfulQueries(1);
+        mockQueryMarker();
+
+        await findAndRunQueries(0);
+
+        // Mock one succcess, one failure
+        expect(getNthMockFunctionCall(0)[0]).toBe('getNextQuery');
+        expect(getNthMockFunctionCall(1)[0]).toBe('runQuery');
+        expect(getNthMockFunctionCall(2)[0]).toBe('markQueryAsRun');
+        expect(getNthMockFunctionCall(3)[0]).toBe('getNextQuery');
+        expect(getNthMockFunctionCall(4)[0]).toBe('runQuery');
+
+        // We have a last call here, which returns null to terminate the loop early
+        expect(getNthMockFunctionCall(5)[0]).toBe('getNextQuery');
+
+        // Ensure there is no extra calls
+        expect(countMockFunctionCalls()).toBe(6);
     });
 
     /**
