@@ -13,6 +13,10 @@ describe('Some tests for findAndRunQueries', () => {
         }
     };
 
+    beforeEach(() => {
+        jest.clearAllMocks();
+    })
+
     test('No queries need to be run', async () => {
         // Don't need to mock other funcs if this one is falsey
         setGlobalMock('getNextQuery', () => {
