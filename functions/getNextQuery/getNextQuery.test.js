@@ -19,15 +19,13 @@ describe('Some tests for getNextQuery', () => {
         await db.close();
     });
 
-    /* @todo Swap all these it() calls for test() - it's just an alias */
-
-    it('shows an empty query set will return nothing', async () => {
+    test('shows an empty query set will return nothing', async () => {
         global.context = getStitchContext();
 
         expect(await getNextQuery()).toBe(null);
     });
 
-    it('shows a recently run query will not be run', async () => {
+    test('shows a recently run query will not be run', async () => {
         global.context = getStitchContext();
 
         // Insert a recently run query
@@ -53,7 +51,7 @@ describe('Some tests for getNextQuery', () => {
         expect(queryObject.phrase).toBe('hello');
     });
 
-    it('shows query that needs running will be run', async () => {
+    test('shows query that needs running will be run', async () => {
         global.context = getStitchContext();
 
         // Calculate an "old" time
