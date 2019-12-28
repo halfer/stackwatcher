@@ -19,6 +19,8 @@ describe('insert', () => {
         await db.close();
     });
 
+    /* @todo Swap all these it() calls for test() - it's just an alias */
+
     it('shows an empty query set will return nothing', async () => {
         global.context = getStitchContext();
 
