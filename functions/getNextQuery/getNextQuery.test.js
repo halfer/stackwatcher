@@ -1,7 +1,7 @@
 const {MongoClient} = require('mongodb');
 const getNextQuery = require('./_source');
 
-describe('insert', () => {
+describe('Some tests for getNextQuery', () => {
     let connection;
     let db;
 
