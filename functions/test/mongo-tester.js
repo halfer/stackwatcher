@@ -9,13 +9,12 @@ function MongoTester() {
     this.connect = connect;
     this.disconnect = disconnect;
     this.getStitchContext = function() {
-        const that = this;
         return {
             services: {
-                get: function(serviceName) {
+                get: (serviceName) => {
                     return {
-                        db: function(databaseName) {
-                            return that.db;
+                        db: (databaseName) => {
+                            return this.db;
                         }
                     }
                 }
