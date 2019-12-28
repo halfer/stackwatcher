@@ -1,16 +1,20 @@
 exports = async function(queryId) {
-    const database = context.services.get("mongodb-atlas").db("stack_watcher");
-    const queriesCollection = database.collection("queries");
-    const log = {
-        type: 'RUN',
-        time: new Date()
-    };
+    const database = context.services.get("mongodb-atlas").db("stack_watcher"),
+        queriesCollection = database.collection("queries"),
+        timeStamp = new Date(),
+        runLog = {
+            type: 'RUN',
+            time: timeStamp
+        };
 
-    queriesCollection.update(
-        { id: new ObjectId(queryId) },
+    await queriesCollection.updateOne(
+        { _id: BSON.ObjectId(queryId) },
         {
+            $set: {
+                last_run_at: timeStamp
+            },
             $push: {
-                logs: newLog
+                logs: runLog
             }
         }
     )

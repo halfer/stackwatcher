@@ -1,4 +1,4 @@
-const {MongoClient} = require('mongodb');
+const {MongoClient, ObjectId} = require('mongodb');
 const markQueryAsRun = require('./_source');
 
 describe('Some tests for markQueryAsRun', () => {
@@ -22,16 +22,37 @@ describe('Some tests for markQueryAsRun', () => {
     });
 
     beforeEach(async () => {
-        await db.collection('queries').deleteMany({});
+        await getQueriesCollection().deleteMany({});
     });
 
-    test('Successful mark query as run', () => {
-        // @todo Add expectations here
+    test('Successful mark query as run', async () => {
+        // @todo Move these into beforeAll or beforeEach?
+        global.context = getStitchContext();
+        global.BSON = { ObjectId: ObjectId };
+
+        // Insert a doc
+        let writeResult = await getQueriesCollection().insertOne({
+            query: 'Hello'
+        });
+
+        // Mark the doc as ran
+        await markQueryAsRun(writeResult._id);
+
+        // Check that the document has been modified as expected
+        let doc = await getQueriesCollection().findOne({});
+        expect(doc).toHaveProperty('last_run_at');
+        expect(doc).toHaveProperty('logs');
+        expect(doc.logs).toHaveProperty('type');
+        expect(doc.logs).toHaveProperty('time');
     });
 
     test('Fail if the supplied ID does not exist', () => {
         // @todo Add expectations here
     });
+
+    function getQueriesCollection() {
+        return db.collection('queries');
+    }
 
     // @todo This is copied from `getNextQuery.test.js`, can we DRY up?
     function getStitchContext() {
