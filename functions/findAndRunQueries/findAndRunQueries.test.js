@@ -27,15 +27,35 @@ describe('Some tests for findAndRunQueries', () => {
     });
 
     test('One query needs to be run', async () => {
-        // @todo Return an object on the first run, null on the second
+        let callCount = 0;
+
+        // Return an object on the first run, null on the second
         setGlobalMock('getNextQuery', () => {
-            return null;
+            if (callCount === 0) {
+                return {
+                    something: 'fixme'
+                };
+            } else {
+                return null;
+            }
+            callCount++;
+        });
+
+        setGlobalMock('runQuery', (query) => {
+            return true;
+        });
+
+        setGlobalMock('markQueryAsRun', (queryId) => {
+            // Does not need to return anything
         });
 
         await findAndRunQueries(0);
 
-        // @todo Ensure runQuery is called once
-        // @todo Ensure markQueryAsRun is called once
+        // Ensure each func is called once
+        expect(getNthMockFunctionCall(0)[0]).toBe('getNextQuery');
+        expect(getNthMockFunctionCall(1)[0]).toBe('runQuery');
+        expect(getNthMockFunctionCall(2)[0]).toBe('markQueryAsRun');
+        expect(countMockFunctionCalls()).toBe(3);
     });
 
     test('Two queries need to be run', async () => {
@@ -50,10 +70,6 @@ describe('Some tests for findAndRunQueries', () => {
 
     function setGlobalMock(funcName, func) {
         globalMocks[funcName] = func;
-    }
-
-    function globalFunctionHandler(...params) {
-        return null;
     }
 
     function getNthMockFunctionCall(n) {
