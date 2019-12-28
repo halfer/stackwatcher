@@ -18,6 +18,8 @@ jobs:
           name: Start Docker container
           command: |
             docker run \
+                --interactive \
+                --tty \
                 --detach \
                 --name ${CIRCLE_PROJECT_REPONAME} \
                 ${CIRCLE_PROJECT_REPONAME}
