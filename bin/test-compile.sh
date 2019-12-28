@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Copy all source.js files as _source.js
 for f in $(find functions/ -name source.js); do cp -- "$f" "$(dirname $f)/_$(basename $f)"; done

@@ -3,4 +3,5 @@
 # Used in the CI test runner
 
 sh bin/test-compile.sh
-sh bin/run-tests.sh
+# Renders simplified output
+CI=true node node_modules/jest/bin/jest.js
