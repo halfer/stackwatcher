@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            sh bin/test-compile.sh && sh bin/run-tests.sh
+            docker exec -it ${CIRCLE_PROJECT_REPONAME} sh bin/test-compile.sh && sh bin/run-tests.sh
       - run:
           name: Stop Docker container
           command: |
