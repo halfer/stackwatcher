@@ -1,22 +1,15 @@
-const {MongoClient} = require('mongodb');
+const MongoTester = require('../test/mongo-tester');
 const getNextQuery = require('./_source');
 
 describe('Some tests for getNextQuery', () => {
-    let connection;
-    let db;
+    const mongoTester = new MongoTester();
 
     beforeAll(async () => {
-        // See this URL for unified topology: https://stackoverflow.com/a/57899638
-        connection = await MongoClient.connect(global.__MONGO_URI__, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        db = await connection.db(global.__MONGO_DB_NAME__);
+        await mongoTester.connect();
     });
 
     afterAll(async () => {
-        await connection.close();
-        await db.close();
+        await mongoTester.disconnect();
     });
 
     beforeEach(() => {
@@ -30,7 +23,7 @@ describe('Some tests for getNextQuery', () => {
 
     test('shows a recently run query will not be run', async () => {
         // Insert a recently run query
-        let queries = db.collection('queries');
+        let queries = mongoTester.getDatabase().collection('queries');
         await queries.insertOne({
             "user_id": 1,
             "phrase": 'hello',
@@ -42,7 +35,7 @@ describe('Some tests for getNextQuery', () => {
 
     test('shows query that has not been run will be run', async () => {
         // Insert a query that has never been run
-        let queries = db.collection('queries');
+        let queries = mongoTester.getDatabase().collection('queries');
         await queries.insertOne(createQueryDoc(null));
 
         // We should get a query this time
@@ -58,7 +51,7 @@ describe('Some tests for getNextQuery', () => {
         );
 
         // Insert a query that needs to be run
-        let queries = db.collection('queries');
+        let queries = mongoTester.getDatabase().collection('queries');
         await queries.insertOne(createQueryDoc(lastRunAt));
 
         // We should get a query this time
@@ -81,7 +74,7 @@ describe('Some tests for getNextQuery', () => {
                 get: function(serviceName) {
                     return {
                         db: function(databaseName) {
-                            return db;
+                            return mongoTester.getDatabase();
                         }
                     }
                 }
