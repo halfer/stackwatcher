@@ -12,10 +12,13 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 
 # Install runtime and test tools
 RUN apt-get update && apt-get install -y nodejs yarn --no-install-recommends yarn
-RUN yarn add jest @shelf/jest-mongodb mongodb-memory-server
+
+# Install dependencies
+COPY package.json .
+COPY yarn.lock .
+RUN yarn install
 
 # Install code for CI build
-COPY package.json .
 COPY bin bin
 COPY functions functions
 
