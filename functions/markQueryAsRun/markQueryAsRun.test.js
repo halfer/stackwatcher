@@ -36,14 +36,14 @@ describe('Some tests for markQueryAsRun', () => {
         });
 
         // Mark the doc as ran
-        await markQueryAsRun(writeResult._id);
+        await markQueryAsRun(writeResult.insertedId);
 
         // Check that the document has been modified as expected
         let doc = await getQueriesCollection().findOne({});
         expect(doc).toHaveProperty('last_run_at');
         expect(doc).toHaveProperty('logs');
-        expect(doc.logs).toHaveProperty('type');
-        expect(doc.logs).toHaveProperty('time');
+        expect(doc.logs[0]).toHaveProperty('type');
+        expect(doc.logs[0]).toHaveProperty('time');
     });
 
     test('Fail if the supplied ID does not exist', () => {

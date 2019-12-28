@@ -7,7 +7,7 @@ exports = async function(queryId) {
             time: timeStamp
         };
 
-    await queriesCollection.updateOne(
+    const updateResult = await queriesCollection.updateOne(
         { _id: BSON.ObjectId(queryId) },
         {
             $set: {
@@ -17,5 +17,10 @@ exports = async function(queryId) {
                 logs: runLog
             }
         }
-    )
+    );
+
+    // Ensure we modified something
+    if (updateResult.modifiedCount === 0) {
+        throw new Error(`Could not find query '${queryId}'`);
+    }
 };
