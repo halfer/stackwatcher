@@ -31,11 +31,8 @@ describe('Some tests for findAndRunQueries', () => {
     });
 
     test('One query needs to be run', async () => {
-        produceNQueries(1);
-
-        setGlobalMock('runQuery', (query) => {
-            return true;
-        });
+        produceNNextQueries(1);
+        produceNSuccessfulQueries(1);
 
         setGlobalMock('markQueryAsRun', (queryId) => {
             // Does not need to return anything
@@ -56,11 +53,8 @@ describe('Some tests for findAndRunQueries', () => {
     });
 
     test('Two queries need to be run', async () => {
-        produceNQueries(2);
-
-        setGlobalMock('runQuery', (query) => {
-            return true;
-        });
+        produceNNextQueries(2);
+        produceNSuccessfulQueries(2);
 
         setGlobalMock('markQueryAsRun', (queryId) => {
             // Does not need to return anything
@@ -92,7 +86,7 @@ describe('Some tests for findAndRunQueries', () => {
      *
      * @param n
      */
-    function produceNQueries(n) {
+    function produceNNextQueries(n) {
         let callCount = 0;
         setGlobalMock('getNextQuery', () => {
             if (callCount++ < n) {
@@ -102,6 +96,13 @@ describe('Some tests for findAndRunQueries', () => {
             } else {
                 return null;
             }
+        });
+    }
+
+    function produceNSuccessfulQueries(n) {
+        let callCount = 0;
+        setGlobalMock('runQuery', (query) => {
+            return callCount++ < n;
         });
     }
 
