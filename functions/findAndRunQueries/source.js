@@ -14,6 +14,8 @@ exports = async function(delay) {
             if (ok) {
                 context.functions.execute('markQueryAsRun', query.id);
             }
+        } else {
+            break;
         }
 
         // Be nice to the API

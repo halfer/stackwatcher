@@ -3,18 +3,12 @@ const findAndRunQueries = require('./_source');
 describe('Some tests for findAndRunQueries', () => {
     let globalFuncs = {};
 
-    /**
-     * Reset the global funcs object
-     */
-    beforeAll(() => {
-        global.context = {
-            functions: {
-                execute: (funcName, ...params) => {
-                    globalFuncs[funcName](...params);
-                }
-            }
-        };
-    });
+    // context.functions.execute() becomes a mock
+    global.context = {
+        functions: {
+            execute: jest.fn(globalFunctionHandler)
+        }
+    };
 
     test('No queries need to be run', async () => {
         // Don't need to mock other funcs if this one is falsey
@@ -24,8 +18,9 @@ describe('Some tests for findAndRunQueries', () => {
 
         await findAndRunQueries(0);
 
-        // @todo Ensure runQuery is not called
-        // @todo Ensure markQueryAsRun is not called
+        // Ensure only getNextQuery is called
+        expect(getNthMockFunctionCall(0)[0]).toBe('getNextQuery');
+        expect(countMockFunctionCalls()).toBe(1);
     });
 
     test('One query needs to be run', async () => {
@@ -45,5 +40,17 @@ describe('Some tests for findAndRunQueries', () => {
 
     function setGlobalFunctionMock(funcName, func) {
         globalFuncs[funcName] = func;
+    }
+
+    function globalFunctionHandler(...params) {
+        return null;
+    }
+
+    function getNthMockFunctionCall(n) {
+        return global.context.functions.execute.mock.calls[n];
+    }
+
+    function countMockFunctionCalls() {
+        return global.context.functions.execute.mock.calls.length;
     }
 });
