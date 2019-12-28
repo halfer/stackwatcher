@@ -31,18 +31,7 @@ describe('Some tests for findAndRunQueries', () => {
     });
 
     test('One query needs to be run', async () => {
-        let callCount = 0;
-
-        // Return an object on the first run, null on the second
-        setGlobalMock('getNextQuery', () => {
-            if (callCount++ === 0) {
-                return {
-                    something: 'fixme'
-                };
-            } else {
-                return null;
-            }
-        });
+        produceNQueries(1);
 
         setGlobalMock('runQuery', (query) => {
             return true;
@@ -59,7 +48,7 @@ describe('Some tests for findAndRunQueries', () => {
         expect(getNthMockFunctionCall(1)[0]).toBe('runQuery');
         expect(getNthMockFunctionCall(2)[0]).toBe('markQueryAsRun');
 
-        // We have a 4th call here, which returns null to terminate the loop early
+        // We have a last call here, which returns null to terminate the loop early
         expect(getNthMockFunctionCall(3)[0]).toBe('getNextQuery');
 
         // Ensure there is no extra calls
@@ -67,14 +56,54 @@ describe('Some tests for findAndRunQueries', () => {
     });
 
     test('Two queries need to be run', async () => {
-        // @todo Ensure runQuery is called twice
-        // @todo Ensure markQueryAsRun is called twice
+        produceNQueries(2);
+
+        setGlobalMock('runQuery', (query) => {
+            return true;
+        });
+
+        setGlobalMock('markQueryAsRun', (queryId) => {
+            // Does not need to return anything
+        });
+
+        await findAndRunQueries(0);
+
+        // Ensure each func is called twice
+        for(let i = 0; i < 4; i+=3) {
+            expect(getNthMockFunctionCall(i + 0)[0]).toBe('getNextQuery');
+            expect(getNthMockFunctionCall(i + 1)[0]).toBe('runQuery');
+            expect(getNthMockFunctionCall(i + 2)[0]).toBe('markQueryAsRun');
+        }
+
+        // We have a last call here, which returns null to terminate the loop early
+        expect(getNthMockFunctionCall(6)[0]).toBe('getNextQuery');
+
+        // Ensure there is no extra calls
+        expect(countMockFunctionCalls()).toBe(7);
     });
 
     test('Two queries, one fails', async () => {
         // @todo Ensure runQuery is called twice
         // @todo Ensure markQueryAsRun is called once
     });
+
+    /**
+     * Sets the getNextQuery mock to produce `n` queries before returning null
+     *
+     * @param n
+     */
+    function produceNQueries(n) {
+        let callCount = 0;
+        setGlobalMock('getNextQuery', () => {
+            if (callCount++ < n) {
+                return {
+                    something: 'fixme'
+                };
+            } else {
+                return null;
+            }
+        });
+    }
 
     function setGlobalMock(funcName, func) {
         globalMocks[funcName] = func;
