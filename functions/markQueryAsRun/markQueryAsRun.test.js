@@ -47,8 +47,16 @@ describe('Some tests for markQueryAsRun', () => {
         expect(doc.logs[0]).toHaveProperty('time');
     });
 
-    test('Fail if the supplied ID does not exist', () => {
-        // @todo Add expectations here
+    test('Throw error if the supplied ID does not exist', async () => {
+        const queryId = '01234567890123456789abcd';
+        try {
+            // This doc does not exist
+            await markQueryAsRun(queryId);
+            throw new Error('markQueryAsRun should have thrown an error');
+        }
+        catch (e) {
+            expect(e.message).toBe(`Could not find query '${queryId}'`);
+        }
     });
 
     function getQueriesCollection() {
