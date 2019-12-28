@@ -1,24 +1,16 @@
-const {MongoClient, ObjectId} = require('mongodb');
+const {ObjectId} = require('mongodb');
+const MongoTester = require('../test/mongo-tester');
 const markQueryAsRun = require('./_source');
 
 describe('Some tests for markQueryAsRun', () => {
-    let connection;
-    let db;
+    const mongoTester = new MongoTester();
 
-    // @todo This is copied from `getNextQuery.test.js`, can we DRY up?
     beforeAll(async () => {
-        // See this URL for unified topology: https://stackoverflow.com/a/57899638
-        connection = await MongoClient.connect(global.__MONGO_URI__, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        db = await connection.db(global.__MONGO_DB_NAME__);
+        await mongoTester.connect();
     });
 
-    // @todo This is copied from `getNextQuery.test.js`, can we DRY up?
     afterAll(async () => {
-        await connection.close();
-        await db.close();
+        await mongoTester.disconnect();
     });
 
     beforeEach(async () => {
@@ -60,7 +52,7 @@ describe('Some tests for markQueryAsRun', () => {
     });
 
     function getQueriesCollection() {
-        return db.collection('queries');
+        return mongoTester.getDatabase().collection('queries');
     }
 
     // @todo This is copied from `getNextQuery.test.js`, can we DRY up?
@@ -70,7 +62,7 @@ describe('Some tests for markQueryAsRun', () => {
                 get: function(serviceName) {
                     return {
                         db: function(databaseName) {
-                            return db;
+                            return mongoTester.getDatabase();
                         }
                     }
                 }
