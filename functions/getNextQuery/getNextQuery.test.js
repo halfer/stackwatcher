@@ -19,15 +19,16 @@ describe('Some tests for getNextQuery', () => {
         await db.close();
     });
 
-    test('shows an empty query set will return nothing', async () => {
+    beforeEach(() => {
+        // Set up global values
         global.context = getStitchContext();
+    });
 
+    test('shows an empty query set will return nothing', async () => {
         expect(await getNextQuery()).toBe(null);
     });
 
     test('shows a recently run query will not be run', async () => {
-        global.context = getStitchContext();
-
         // Insert a recently run query
         let queries = db.collection('queries');
         await queries.insertOne({
@@ -39,9 +40,7 @@ describe('Some tests for getNextQuery', () => {
         expect(await getNextQuery()).toBe(null);
     });
 
-    it('shows query that has not been run will be run', async () => {
-        global.context = getStitchContext();
-
+    test('shows query that has not been run will be run', async () => {
         // Insert a query that has never been run
         let queries = db.collection('queries');
         await queries.insertOne(createQueryDoc(null));
@@ -52,8 +51,6 @@ describe('Some tests for getNextQuery', () => {
     });
 
     test('shows query that needs running will be run', async () => {
-        global.context = getStitchContext();
-
         // Calculate an "old" time
         let lastRunAt = new Date();
         lastRunAt.setTime(
