@@ -7,6 +7,9 @@ describe('Some tests for findAndRunQueries', () => {
     global.context = {
         functions: {
             execute: jest.fn((funcName, ...params) => {
+                if (globalMocks[funcName] == undefined) {
+                    throw new Error(`Mock function '${funcName}' not defined`);
+                }
                 // This calls a mock that we set up per test
                 return globalMocks[funcName](...params);
             })
