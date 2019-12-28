@@ -1,18 +1,21 @@
 const findAndRunQueries = require('./_source');
 
 describe('Some tests for findAndRunQueries', () => {
-    let globalFuncs = {};
+    let globalMocks = {};
 
     // context.functions.execute() becomes a mock
     global.context = {
         functions: {
-            execute: jest.fn(globalFunctionHandler)
+            execute: jest.fn((funcName, ...params) => {
+                // This calls a mock that we set up per test
+                return globalMocks[funcName](...params);
+            })
         }
     };
 
     test('No queries need to be run', async () => {
         // Don't need to mock other funcs if this one is falsey
-        setGlobalFunctionMock('getNextQuery', () => {
+        setGlobalMock('getNextQuery', () => {
             return null;
         });
 
@@ -24,6 +27,13 @@ describe('Some tests for findAndRunQueries', () => {
     });
 
     test('One query needs to be run', async () => {
+        // @todo Return an object on the first run, null on the second
+        setGlobalMock('getNextQuery', () => {
+            return null;
+        });
+
+        await findAndRunQueries(0);
+
         // @todo Ensure runQuery is called once
         // @todo Ensure markQueryAsRun is called once
     });
@@ -38,8 +48,8 @@ describe('Some tests for findAndRunQueries', () => {
         // @todo Ensure markQueryAsRun is called once
     });
 
-    function setGlobalFunctionMock(funcName, func) {
-        globalFuncs[funcName] = func;
+    function setGlobalMock(funcName, func) {
+        globalMocks[funcName] = func;
     }
 
     function globalFunctionHandler(...params) {
