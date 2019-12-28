@@ -14,7 +14,7 @@ describe('Some tests for getNextQuery', () => {
 
     beforeEach(() => {
         // Set up global values
-        global.context = getStitchContext();
+        global.context = mongoTester.getStitchContext();
     });
 
     test('shows an empty query set will return nothing', async () => {
@@ -66,19 +66,5 @@ describe('Some tests for getNextQuery', () => {
             "last_run_at": lastRunAt,
             "enabled": true
         }
-    }
-
-    function getStitchContext() {
-        return {
-            services: {
-                get: function(serviceName) {
-                    return {
-                        db: function(databaseName) {
-                            return mongoTester.getDatabase();
-                        }
-                    }
-                }
-            }
-        };
     }
 });

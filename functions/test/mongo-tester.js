@@ -1,10 +1,27 @@
 const {MongoClient} = require('mongodb');
 
 function MongoTester() {
+    // Properties
     this.connection = null;
     this.db = null;
+
+    // Functions
     this.connect = connect;
     this.disconnect = disconnect;
+    this.getStitchContext = function() {
+        const that = this;
+        return {
+            services: {
+                get: function(serviceName) {
+                    return {
+                        db: function(databaseName) {
+                            return that.db;
+                        }
+                    }
+                }
+            }
+        };
+    }
     this.getConnection = function() {
         return this.connection;
     }

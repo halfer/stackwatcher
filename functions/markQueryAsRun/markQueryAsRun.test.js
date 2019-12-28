@@ -15,7 +15,7 @@ describe('Some tests for markQueryAsRun', () => {
 
     beforeEach(async () => {
         // Set up global values
-        global.context = getStitchContext();
+        global.context = mongoTester.getStitchContext();
         global.BSON = { ObjectId: ObjectId };
 
         // Empty any collections we are using
@@ -53,20 +53,5 @@ describe('Some tests for markQueryAsRun', () => {
 
     function getQueriesCollection() {
         return mongoTester.getDatabase().collection('queries');
-    }
-
-    // @todo This is copied from `getNextQuery.test.js`, can we DRY up?
-    function getStitchContext() {
-        return {
-            services: {
-                get: function(serviceName) {
-                    return {
-                        db: function(databaseName) {
-                            return mongoTester.getDatabase();
-                        }
-                    }
-                }
-            }
-        };
     }
 });
