@@ -22,14 +22,15 @@ describe('Some tests for markQueryAsRun', () => {
     });
 
     beforeEach(async () => {
+        // Set up global values
+        global.context = getStitchContext();
+        global.BSON = { ObjectId: ObjectId };
+
+        // Empty any collections we are using
         await getQueriesCollection().deleteMany({});
     });
 
     test('Successful mark query as run', async () => {
-        // @todo Move these into beforeAll or beforeEach?
-        global.context = getStitchContext();
-        global.BSON = { ObjectId: ObjectId };
-
         // Insert a doc
         let writeResult = await getQueriesCollection().insertOne({
             query: 'Hello'
