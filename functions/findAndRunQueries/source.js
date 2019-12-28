@@ -1,6 +1,6 @@
-exports = async function(queryCount) {
+exports = async function(queryCount, delay) {
     /**
-     * The lambda only has 60 seconds to run, so it should test how
+     * @todo The lambda only has 60 seconds to run, so it should test how
      * long it has been running in the loop, and exit before it gets to,
      * say, 50 seconds.
      */
@@ -17,7 +17,7 @@ exports = async function(queryCount) {
         }
 
         // Be nice to the API
-        await sleep(1000);
+        await sleep(delay);
     }
 
     function sleep(ms) {
