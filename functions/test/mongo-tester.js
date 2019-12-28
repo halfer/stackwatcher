@@ -20,13 +20,13 @@ function MongoTester() {
                 }
             }
         };
-    }
+    };
     this.getConnection = function() {
         return this.connection;
-    }
+    };
     this.getDatabase = function() {
         return this.db;
-    }
+    };
 }
 
 async function connect() {
