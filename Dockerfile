@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y nodejs yarn --no-install-recommends yar
 RUN yarn add jest @shelf/jest-mongodb mongodb-memory-server
 
 # Install code for CI build
+COPY bin bin
 COPY functions functions
 
 CMD ["/bin/bash"]

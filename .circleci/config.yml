@@ -22,8 +22,10 @@ jobs:
                 --name ${CIRCLE_PROJECT_REPONAME} \
                 ${CIRCLE_PROJECT_REPONAME}
             docker ps
-      # @todo Wait for container to be ready
-      # @todo Run tests
+      - run:
+          name: Run tests
+          command: |
+            sh bin/test-compile.sh && sh bin/run-tests.sh
       - run:
           name: Stop Docker container
           command: |
