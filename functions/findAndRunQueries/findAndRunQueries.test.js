@@ -8,8 +8,10 @@ describe('Some tests for findAndRunQueries', () => {
      */
     beforeAll(() => {
         global.context = {
-            execute: (funcName, ...params) => {
-                globalFuncs[funcName](...params);
+            functions: {
+                execute: (funcName, ...params) => {
+                    globalFuncs[funcName](...params);
+                }
             }
         };
     });
@@ -20,7 +22,7 @@ describe('Some tests for findAndRunQueries', () => {
             return null;
         });
 
-        findAndRunQueries(0);
+        await findAndRunQueries(0);
 
         // @todo Ensure runQuery is not called
         // @todo Ensure markQueryAsRun is not called
