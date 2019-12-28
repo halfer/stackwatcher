@@ -31,14 +31,13 @@ describe('Some tests for findAndRunQueries', () => {
 
         // Return an object on the first run, null on the second
         setGlobalMock('getNextQuery', () => {
-            if (callCount === 0) {
+            if (callCount++ === 0) {
                 return {
                     something: 'fixme'
                 };
             } else {
                 return null;
             }
-            callCount++;
         });
 
         setGlobalMock('runQuery', (query) => {
@@ -51,11 +50,16 @@ describe('Some tests for findAndRunQueries', () => {
 
         await findAndRunQueries(0);
 
-        // Ensure each func is called once
+        // Ensure each func is called
         expect(getNthMockFunctionCall(0)[0]).toBe('getNextQuery');
         expect(getNthMockFunctionCall(1)[0]).toBe('runQuery');
         expect(getNthMockFunctionCall(2)[0]).toBe('markQueryAsRun');
-        expect(countMockFunctionCalls()).toBe(3);
+
+        // We have a 4th call here, which returns null to terminate the loop early
+        expect(getNthMockFunctionCall(3)[0]).toBe('getNextQuery');
+
+        // Ensure there is no extra calls
+        expect(countMockFunctionCalls()).toBe(4);
     });
 
     test('Two queries need to be run', async () => {
