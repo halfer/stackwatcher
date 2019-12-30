@@ -1,16 +1,15 @@
 const callApi = require('./_source');
 
 describe('Some tests for callApi', () => {
+    let httpService;
 
-    beforeAll(async () => {
-        const httpService = getHttpService();
+    beforeEach(async () => {
+        // This inserts the service and value getters globally
+        httpService = getHttpService();
+        global.context = getDefaultContext(httpService);
     });
 
     test('Simple fetch with no user', async () => {
-
-        // This inserts the service and value getters globally
-        const httpService = getHttpService();
-        global.context = getDefaultContext(httpService);
 
         expect(await callApi('hello')).toBe(123);
 
@@ -24,10 +23,6 @@ describe('Some tests for callApi', () => {
 
     test('Simple fetch with user', async () => {
 
-        // This inserts the service and value getters globally
-        const httpService = getHttpService();
-        global.context = getDefaultContext(httpService);
-
         expect(await callApi('hello', 54321)).toBe(123);
 
         // Check the mocks are behaving as expected
@@ -39,10 +34,6 @@ describe('Some tests for callApi', () => {
     });
 
     test('Simple fetch with multiple words', async () => {
-
-        // This inserts the service and value getters globally
-        const httpService = getHttpService();
-        global.context = getDefaultContext(httpService);
 
         expect(await callApi('hello world')).toBe(123);
 
