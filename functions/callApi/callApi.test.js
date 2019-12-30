@@ -46,12 +46,23 @@ describe('Some tests for callApi', () => {
     });
 
     test('HTTP response not in JSON', async () => {
-
+        // FIXME
     });
 
     test('JSON response not in correct format', async () => {
 
-    })
+        // Overrides the default HTTP service mock
+        httpService = getHttpService('{"dodgy-response": 1}');
+        global.context = getDefaultContext(httpService);
+
+        try {
+            await callApi('hello');
+            throw new Error('callApi call should have thrown an error');
+        }
+        catch (e) {
+            expect(e.message).toBe('Response from Stack Overflow not in expected format');
+        }
+    });
 
     function getDefaultContext(httpService) {
         // Mock the service getter
@@ -66,9 +77,15 @@ describe('Some tests for callApi', () => {
         };
     }
 
-    function getHttpService() {
-        const textFunc = function () {
-            return '{"total": 123}';
+    /**
+     * Mocks the HTTP service
+     *
+     * @param jsonResponse Optional JSON response string
+     * @returns Promise
+     */
+    function getHttpService(jsonResponse) {
+        const textFunc = () => {
+            return jsonResponse === undefined ? '{"total": 123}' : jsonResponse;
         };
         const promise = new Promise(function (resolve, reject) {
             resolve({

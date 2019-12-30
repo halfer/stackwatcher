@@ -1,4 +1,5 @@
 exports = async function(query, userId) {
+  // @todo Swap this file to four-space indent
   const http = context.services.get("HTTP");
   const urlBase = context.values.get("stackOverflowApiUrl");
   const options = [
@@ -19,6 +20,13 @@ exports = async function(query, userId) {
 
   // Decode the response body
   const jsonText = JSON.parse(response.body.text());
+
+  // Throw an exception if the response is not in the expected format
+  if (jsonText.total === undefined) {
+    throw new Error(
+        'Response from Stack Overflow not in expected format'
+    );
+  }
 
   return jsonText.total;
 };
