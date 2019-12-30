@@ -48,6 +48,14 @@ test('Simple fetch with multiple words', async () => {
     );
 });
 
+test('HTTP response not in JSON', async() => {
+
+});
+
+test('JSON response not in correct format', async() => {
+
+})
+
 function getDefaultContext(httpService) {
     // Mock the service getter
     const serviceGetter = jest.fn(service => httpService);
