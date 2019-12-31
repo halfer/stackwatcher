@@ -21,5 +21,6 @@ RUN yarn install
 # Install code for CI build
 COPY bin bin
 COPY functions functions
+COPY test test
 
 CMD ["/bin/bash"]
