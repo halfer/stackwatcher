@@ -1,5 +1,5 @@
 const {ObjectId} = require('mongodb');
-const MongoTester = require('../test/mongo-tester');
+const MongoTester = require('../../test/mongo-tester');
 const markQueryAsRun = require('./_source');
 
 describe('Some tests for markQueryAsRun', () => {

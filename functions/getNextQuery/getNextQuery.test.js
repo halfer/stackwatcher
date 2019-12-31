@@ -1,4 +1,4 @@
-const MongoTester = require('../test/mongo-tester');
+const MongoTester = require('../../test/mongo-tester');
 const getNextQuery = require('./_source');
 
 describe('Some tests for getNextQuery', () => {
