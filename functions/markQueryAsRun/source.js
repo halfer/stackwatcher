@@ -7,6 +7,22 @@ exports = async function(queryId) {
             time: timeStamp
         };
 
+    // Check logs key is of the right type...
+    const query = await queriesCollection.findOne(
+        { _id: BSON.ObjectId(queryId) },
+        { logs: 1 }
+    );
+
+    // @todo Move the exception at the end to here?
+
+    // ... the property not existing is fine
+    if (query && 'logs' in query) {
+        if (!Array.isArray(query.logs)) {
+            throw new Error(`The logs for query '${queryId}' are not an array`);
+        }
+        console.log(typeof query.logs);
+    }
+
     const updateResult = await queriesCollection.updateOne(
         { _id: BSON.ObjectId(queryId) },
         {

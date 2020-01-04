@@ -51,6 +51,24 @@ describe('Some tests for markQueryAsRun', () => {
         }
     });
 
+    test('Throw error if the logs subdocument is not an array', async () => {
+        // Insert a doc
+        let writeResult = await getQueriesCollection().insertOne({
+            query: 'Hello',
+            logs: {} // Oops, this is an object
+        });
+
+        try {
+            // Try to mark the doc as ran
+            await markQueryAsRun(writeResult.insertedId);
+            throw new Error('markQueryAsRun should have thrown an error');
+        }
+        catch (e) {
+            let queryId = writeResult.insertedId;
+            expect(e.message).toBe(`The logs for query '${queryId}' are not an array`);
+        }
+    });
+
     function getQueriesCollection() {
         return mongoTester.getDatabase().collection('queries');
     }
