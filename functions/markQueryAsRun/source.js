@@ -20,7 +20,6 @@ exports = async function(queryId) {
         if (!Array.isArray(query.logs)) {
             throw new Error(`The logs for query '${queryId}' are not an array`);
         }
-        console.log(typeof query.logs);
     }
 
     const updateResult = await queriesCollection.updateOne(
