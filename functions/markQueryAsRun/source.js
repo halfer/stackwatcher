@@ -38,4 +38,6 @@ exports = async function(queryId) {
     if (updateResult.modifiedCount === 0) {
         throw new Error(`Could not find query '${queryId}'`);
     }
+
+    return true;
 };
