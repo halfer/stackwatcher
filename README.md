@@ -72,16 +72,43 @@ copy the JSON file from there to the project `functions` folder.
 Console utility
 ---
 
-(Add notes on what this is, login, whoami)
+The folks over at Mongo offer a [Stitch console utility](https://github.com/10gen/stitch-cli) to import/export
+apps. Since I am cautious about running other people's code on my machines, I created a
+[Docker version](https://github.com/halfer/docker-stitch-cli).
 
-(todo)
+The following are Docker commands to authenticate to MongoDB Stitch.
+
+To log in:
+
+```
+docker run --rm -it --volume=`echo $HOME`/.config/stitch:/root/.config/stitch stitch-cli login --username=youremail@example.com --api-key=01234567-abcd-efgh-ijkl-mnopqrstuvwx
+```
+
+Your logged-in status will be saved on your host, and will survive reboots.
+
+To check you are logged in:
+
+```
+docker run --rm -it --volume=`echo $HOME`/.config/stitch:/root/.config/stitch stitch-cli whoami
+```
 
 Exporting the app
 ---
 
-(todo)
+Here is how to deploy to Mongo Stitch. You need to be logged in for this:
+
+```
+docker run --rm -it --volume=`echo $HOME`/.config/stitch:/root/.config/stitch --volume=`pwd`:/project stitch-cli import --strategy=merge
+```
 
 Importing the app (deployment)
 ---
 
-(todo)
+To refresh your local copy from Mongo Stitch, you can export instead. To be safe, ensure that you keep
+everything under version control, and that your working directory is clear of local changes before
+doing this. The export will happen in a sub-folder, and thus you need to copy and changes you wish to
+keep from the export back to your local version.
+
+```
+docker run --rm -it --volume=`echo $HOME`/.config/stitch:/root/.config/stitch --volume=`pwd`/export:/export stitch-cli export --app-id=stackwatcher-prod-keysc --output /export/app
+```
