@@ -27,5 +27,5 @@ exports = async function(query, userId) {
         );
     }
 
-  return jsonText.total;
+    return jsonText.total;
 };

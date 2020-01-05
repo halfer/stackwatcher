@@ -1,6 +1,6 @@
-const callApi = require('./_source');
+const runQuery = require('./_source');
 
-describe('Some tests for callApi', () => {
+describe('Some tests for runQuery', () => {
     let httpService;
 
     beforeEach(async () => {
@@ -11,7 +11,7 @@ describe('Some tests for callApi', () => {
 
     test('Simple fetch with no user', async () => {
 
-        expect(await callApi('hello')).toBe(123);
+        expect(await runQuery('hello')).toBe(123);
 
         // Check the mocks are behaving as expected
         expect(global.context.values.get.mock.calls[0][0]).toBe('stackOverflowApiUrl');
@@ -23,7 +23,7 @@ describe('Some tests for callApi', () => {
 
     test('Simple fetch with user', async () => {
 
-        expect(await callApi('hello', 54321)).toBe(123);
+        expect(await runQuery('hello', 54321)).toBe(123);
 
         // Check the mocks are behaving as expected
         expect(global.context.values.get.mock.calls[0][0]).toBe('stackOverflowApiUrl');
@@ -35,7 +35,7 @@ describe('Some tests for callApi', () => {
 
     test('Simple fetch with multiple words', async () => {
 
-        expect(await callApi('hello world')).toBe(123);
+        expect(await runQuery('hello world')).toBe(123);
 
         // Check the mocks are behaving as expected
         expect(global.context.values.get.mock.calls[0][0]).toBe('stackOverflowApiUrl');
@@ -56,8 +56,8 @@ describe('Some tests for callApi', () => {
         global.context = getDefaultContext(httpService);
 
         try {
-            await callApi('hello');
-            throw new Error('callApi call should have thrown an error');
+            await runQuery('hello');
+            throw new Error('runQuery call should have thrown an error');
         }
         catch (e) {
             expect(e.message).toBe('Response from Stack Overflow not in expected format');
