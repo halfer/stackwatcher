@@ -2,6 +2,5 @@
     "id": "5e0a8605922850cbac119e99",
     "name": "findAndRunQueries",
     "private": true,
-    "run_as_system": true,
-    "disable_arg_logs": false
+    "run_as_system": true
 }
