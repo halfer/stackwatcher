@@ -104,7 +104,8 @@ describe('Some tests for findAndRunQueries', () => {
         setGlobalMock('getNextQuery', () => {
             if (callCount++ < n) {
                 return {
-                    something: 'fixme'
+                    phrase: 'hello',
+                    user_id: null
                 };
             } else {
                 return null;

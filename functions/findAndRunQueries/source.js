@@ -10,7 +10,7 @@ exports = async function(delay) {
     for (let i = 0; i < 5; i++) {
         query = context.functions.execute('getNextQuery');
         if (query) {
-            ok = context.functions.execute('runQuery', query);
+            ok = context.functions.execute('runQuery', query.phrase, query.user_id);
             if (ok) {
                 context.functions.execute('markQueryAsRun', query.id);
             }
