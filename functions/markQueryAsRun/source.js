@@ -7,9 +7,14 @@ exports = async function(queryId) {
             time: timeStamp
         };
 
+    // Make sure queryId is an object
+    if (typeof queryId !== 'object') {
+        throw new Error('The queryId must be an ObjectId');
+    }
+
     // Check logs key is of the right type...
     const query = await queriesCollection.findOne(
-        { _id: BSON.ObjectId(queryId) },
+        { _id: queryId },
         { logs: 1 }
     );
 
@@ -23,7 +28,7 @@ exports = async function(queryId) {
     }
 
     const updateResult = await queriesCollection.updateOne(
-        { _id: BSON.ObjectId(queryId) },
+        { _id: queryId },
         {
             $set: {
                 last_run_at: timeStamp

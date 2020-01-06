@@ -40,7 +40,7 @@ describe('Some tests for markQueryAsRun', () => {
     });
 
     test('Throw error if the supplied ID does not exist', async () => {
-        const queryId = '01234567890123456789abcd';
+        const queryId = new BSON.ObjectId('01234567890123456789abcd');
         try {
             // This doc does not exist
             await markQueryAsRun(queryId);
@@ -48,6 +48,17 @@ describe('Some tests for markQueryAsRun', () => {
         }
         catch (e) {
             expect(e.message).toBe(`Could not find query '${queryId}'`);
+        }
+    });
+
+    test('Throw an error if the supplied ID is of the wrong type', async () => {
+        try {
+            // This should fail as the ID is a string
+            await markQueryAsRun('01234567890123456789abcd');
+            throw new Error('markQueryAsRun should have thrown an error');
+        }
+        catch (e) {
+            expect(e.message).toBe(`The queryId must be an ObjectId`);
         }
     });
 
