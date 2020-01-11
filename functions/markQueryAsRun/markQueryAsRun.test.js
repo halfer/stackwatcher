@@ -15,7 +15,9 @@ describe('Some tests for markQueryAsRun', () => {
 
     beforeEach(async () => {
         // Set up global values
-        global.context = mongoTester.getStitchContext();
+        global.context = {
+            services: mongoTester.getStitchContext()
+        };
         global.BSON = { ObjectId: ObjectId };
 
         // Empty any collections we are using

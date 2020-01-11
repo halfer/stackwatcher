@@ -14,7 +14,9 @@ describe('Some tests for getNextQuery', () => {
 
     beforeEach(() => {
         // Set up global values
-        global.context = mongoTester.getStitchContext();
+        global.context = {
+            services: mongoTester.getStitchContext()
+        };
     });
 
     test('shows an empty query set will return nothing', async () => {

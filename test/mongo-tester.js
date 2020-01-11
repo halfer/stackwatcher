@@ -10,12 +10,10 @@ function MongoTester() {
     this.disconnect = disconnect;
     this.getStitchContext = function() {
         return {
-            services: {
-                get: (serviceName) => {
-                    return {
-                        db: (databaseName) => {
-                            return this.db;
-                        }
+            get: (serviceName) => {
+                return {
+                    db: (databaseName) => {
+                        return this.db;
                     }
                 }
             }
