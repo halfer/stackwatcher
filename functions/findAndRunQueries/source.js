@@ -23,9 +23,9 @@ exports = async function(delay) {
 
         // Be nice to the API
         await sleep(delay);
-
-        //return count; // FIXME
     }
+
+    return count;
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
