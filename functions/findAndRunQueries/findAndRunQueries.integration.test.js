@@ -35,11 +35,7 @@ describe('Some integration tests for findAndRunQueries', () => {
         stitchFuncMocking.setGlobalMock('markQueryAsRun', markQueryAsRun);
 
         // Truncate all collections in use
-        const collections = ['queries'];
-        collections.forEach(function (collectionName) {
-            let collection = mongoTester.getDatabase().collection(collectionName);
-            collection.deleteMany({});
-        });
+        mongoTester.emptyCollections(['queries']);
     });
 
     test('end-to-end test with no queries', async () => {
@@ -47,8 +43,20 @@ describe('Some integration tests for findAndRunQueries', () => {
     });
 
     test('end-to-end test with one successful query', async () => {
-        // FIXME add a query collection here
+
+        // Here is a query entry
+        /*
+        mongoTester.getDatabase().collection('queries').insertOne({
+            "user_id": 1,
+            "phrase": 'hello',
+            "last_run_at": null,
+            "enabled": true
+        });
+        */
+
         // FIXME need to add a mock for runQuery
+
+        // Let's see if we can run a call sucessfully
         expect(await findAndRunQueries(0)).toBe(0);
     });
 

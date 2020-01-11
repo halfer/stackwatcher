@@ -67,6 +67,6 @@ describe('Some tests for getNextQuery', () => {
             "phrase": 'hello',
             "last_run_at": lastRunAt,
             "enabled": true
-        }
+        };
     }
 });

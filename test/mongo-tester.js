@@ -6,8 +6,20 @@ function MongoTester() {
     this.db = null;
 
     // Functions
-    this.connect = connect;
-    this.disconnect = disconnect;
+    this.connect = async function() {
+        // See this URL for unified topology: https://stackoverflow.com/a/57899638
+        this.connection = await MongoClient.connect(global.__MONGO_URI__, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        this.db = await this.connection.db(global.__MONGO_DB_NAME__);
+    };
+
+    this.disconnect = async function() {
+        await this.connection.close();
+        await this.db.close();
+    };
+
     this.getStitchContext = function() {
         return {
             get: (serviceName) => {
@@ -19,26 +31,21 @@ function MongoTester() {
             }
         };
     };
+
+    this.emptyCollections = function(collections) {
+        collections.forEach((collectionName) => {
+            let collection = this.getDatabase().collection(collectionName);
+            collection.deleteMany({});
+        });
+    };
+
     this.getConnection = function() {
         return this.connection;
     };
+
     this.getDatabase = function() {
         return this.db;
     };
-}
-
-async function connect() {
-    // See this URL for unified topology: https://stackoverflow.com/a/57899638
-    this.connection = await MongoClient.connect(global.__MONGO_URI__, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
-    this.db = await this.connection.db(global.__MONGO_DB_NAME__);
-}
-
-async function disconnect() {
-    await this.connection.close();
-    await this.db.close();
 }
 
 module.exports = MongoTester;
