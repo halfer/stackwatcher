@@ -1,11 +1,17 @@
-const MongoTester = require('../../test/mongo-tester');
+// Main SUT
 const findAndRunQueries = require('./_source');
+
+// Utility test classes
+const MongoTester = require('../../test/mongo-tester');
+const StitchFuncMocking = require('../../test/stitch-func-mocking');
+
+// Other functions for the integration test
 const getNextQuery = require('../getNextQuery/_source');
 const markQueryAsRun = require('../markQueryAsRun/_source');
 
 describe('Some integration tests for findAndRunQueries', () => {
     const mongoTester = new MongoTester();
-    let globalMocks = {};
+    const stitchFuncMocking = new StitchFuncMocking();
 
     beforeAll(async () => {
         await mongoTester.connect();
@@ -17,27 +23,16 @@ describe('Some integration tests for findAndRunQueries', () => {
 
     beforeEach(() => {
         // Set up global values
-        global.context = {
-            services: mongoTester.getStitchContext()
-        };
+        global.context = {};
+        global.context.services = mongoTester.getStitchContext();
+        global.context.functions = stitchFuncMocking.getFunctionsObject(jest);
 
         // Delete existing mocks
         jest.clearAllMocks();
 
-        // Connect the function calls
-        global.context.functions = {
-            execute: jest.fn((funcName, ...params) => {
-                if (globalMocks[funcName] == undefined) {
-                    throw new Error(`Mock function '${funcName}' not defined`);
-                }
-                // This calls a mock that we set up per test
-                return globalMocks[funcName](...params);
-            })
-        };
-
         // Connect some real implementations
-        setGlobalMock('getNextQuery', getNextQuery);
-        setGlobalMock('markQueryAsRun', markQueryAsRun);
+        stitchFuncMocking.setGlobalMock('getNextQuery', getNextQuery);
+        stitchFuncMocking.setGlobalMock('markQueryAsRun', markQueryAsRun);
 
         // Truncate all collections in use
         const collections = ['queries'];
@@ -60,8 +55,4 @@ describe('Some integration tests for findAndRunQueries', () => {
     test('end-to-end test with one failed query', async () => {
         // FIXME
     });
-
-    function setGlobalMock(funcName, func) {
-        globalMocks[funcName] = func;
-    }
 });

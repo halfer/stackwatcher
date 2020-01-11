@@ -1,20 +1,12 @@
 const findAndRunQueries = require('./_source');
+const StitchFuncMocking = require('../../test/stitch-func-mocking');
 
 describe('Some tests for findAndRunQueries', () => {
-    let globalMocks = {};
+    const stitchFuncMocking = new StitchFuncMocking();
 
     // context.functions.execute() becomes a mock
-    global.context = {
-        functions: {
-            execute: jest.fn((funcName, ...params) => {
-                if (globalMocks[funcName] == undefined) {
-                    throw new Error(`Mock function '${funcName}' not defined`);
-                }
-                // This calls a mock that we set up per test
-                return globalMocks[funcName](...params);
-            })
-        }
-    };
+    global.context = {};
+    global.context.functions = stitchFuncMocking.getFunctionsObject(jest);
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -22,7 +14,7 @@ describe('Some tests for findAndRunQueries', () => {
 
     test('No queries need to be run', async () => {
         // Don't need to mock other funcs if this one is falsey
-        setGlobalMock('getNextQuery', () => {
+        stitchFuncMocking.setGlobalMock('getNextQuery', () => {
             return null;
         });
 
@@ -101,7 +93,7 @@ describe('Some tests for findAndRunQueries', () => {
      */
     function produceNNextQueries(n) {
         let callCount = 0;
-        setGlobalMock('getNextQuery', () => {
+        stitchFuncMocking.setGlobalMock('getNextQuery', () => {
             if (callCount++ < n) {
                 return {
                     phrase: 'hello',
@@ -115,19 +107,15 @@ describe('Some tests for findAndRunQueries', () => {
 
     function produceNSuccessfulQueries(n) {
         let callCount = 0;
-        setGlobalMock('runQuery', (query) => {
+        stitchFuncMocking.setGlobalMock('runQuery', (query) => {
             return callCount++ < n;
         });
     }
 
     function mockQueryMarker() {
-        setGlobalMock('markQueryAsRun', (queryId) => {
+        stitchFuncMocking.setGlobalMock('markQueryAsRun', (queryId) => {
             // Does not need to return anything
         });
-    }
-
-    function setGlobalMock(funcName, func) {
-        globalMocks[funcName] = func;
     }
 
     function getNthMockFunctionCall(n) {
