@@ -7,12 +7,15 @@ exports = async function(delay) {
 
     let query;
     let ok;
+    let count = 0;
+
     for (let i = 0; i < 5; i++) {
         query = await context.functions.execute('getNextQuery');
         if (query) {
             ok = context.functions.execute('runQuery', query.phrase, query.user_id);
             if (ok) {
                 context.functions.execute('markQueryAsRun', query._id);
+                //count++; FIXME, current fails the test?
             }
         } else {
             break;
@@ -20,6 +23,8 @@ exports = async function(delay) {
 
         // Be nice to the API
         await sleep(delay);
+
+        //return count; FIXME
     }
 
     function sleep(ms) {
