@@ -15,7 +15,7 @@ exports = async function(delay) {
             ok = context.functions.execute('runQuery', query.phrase, query.user_id);
             if (ok) {
                 context.functions.execute('markQueryAsRun', query._id);
-                //count++; FIXME, current fails the test?
+                count++;
             }
         } else {
             break;
@@ -24,7 +24,7 @@ exports = async function(delay) {
         // Be nice to the API
         await sleep(delay);
 
-        //return count; FIXME
+        //return count; // FIXME
     }
 
     function sleep(ms) {
