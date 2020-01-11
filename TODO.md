@@ -1,7 +1,7 @@
 TODO
 ---
 
-10. Implement the `runQuery` function
+11. Write some integration tests
 5. Add a test to check if the HTTP op failed
 6. Log a query failure if there is an HTTP problem
 7. Create a system log containing succcessful/failed API calls
@@ -15,3 +15,4 @@ DONE
 9. Move `functions/test` so it does not upset Stitch CLI import
 2. Document how to publish the project to Stitch
 4. Test all functions in Stitch
+10. Delete `runQuery`, rename `callApi` to `runQuery`, fix up tests
