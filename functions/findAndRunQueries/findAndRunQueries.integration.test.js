@@ -43,25 +43,38 @@ describe('Some integration tests for findAndRunQueries', () => {
         expect(await findAndRunQueries(0)).toBe(0);
     });
 
+    test('end-to-end test with no queries due', async () => {
+        // FIXME
+    });
+
     test('end-to-end test with one successful query', async () => {
 
         // Here is a query entry
-        /*
         mongoTester.getDatabase().collection('queries').insertOne({
             "user_id": 1,
             "phrase": 'hello',
             "last_run_at": null,
             "enabled": true
         });
-        */
 
-        // FIXME need to add a mock for runQuery
+        // We need to mock runQuery, as that calls an external API
+        stitchFuncMocking.setGlobalMock('runQuery', () => 123);
 
         // Let's see if we can run a call sucessfully
-        expect(await findAndRunQueries(0)).toBe(0);
+        expect(await findAndRunQueries(0)).toBe(1);
+
+        // @todo Check that a log entry has been made
     });
 
     test('end-to-end test with one failed query', async () => {
+        // FIXME
+    });
+
+    test('end-to-end test with a decreased count', async () => {
+        // FIXME
+    });
+
+    test('end-to-end test with an increased count', async () => {
         // FIXME
     });
 });
