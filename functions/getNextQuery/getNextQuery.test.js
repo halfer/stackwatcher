@@ -61,6 +61,8 @@ describe('Some tests for getNextQuery', () => {
 
         // We should get a query this time
         let queryObject = await getNextQuery();
+        // FIXME This is sometimes failing in CircleCI - why? If queryObject
+        // is null, dump the db to the screen so we can see it.
         expect(queryObject.phrase).toBe('hello');
     });
 
