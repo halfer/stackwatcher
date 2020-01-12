@@ -21,7 +21,7 @@ describe('Some integration tests for findAndRunQueries', () => {
         await mongoTester.disconnect();
     });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         // Set up global values
         global.context = {};
         global.context.services = mongoTester.getStitchContext();
@@ -36,7 +36,7 @@ describe('Some integration tests for findAndRunQueries', () => {
         stitchFuncMocking.setGlobalMock('markQueryAsRun', markQueryAsRun);
 
         // Truncate all collections in use
-        mongoTester.emptyCollections(['queries']);
+        await mongoTester.emptyCollections(['queries']);
     });
 
     test('end-to-end test with no queries', async () => {

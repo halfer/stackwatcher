@@ -12,14 +12,14 @@ describe('Some tests for getNextQuery', () => {
         await mongoTester.disconnect();
     });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         // Set up global values
         global.context = {
             services: mongoTester.getStitchContext()
         };
 
         // Truncate all collections in use
-        mongoTester.emptyCollections(['queries']);
+        await mongoTester.emptyCollections(['queries']);
     });
 
     test('shows an empty query set will return nothing', async () => {

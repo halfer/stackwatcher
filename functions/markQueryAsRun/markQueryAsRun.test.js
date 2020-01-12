@@ -20,11 +20,8 @@ describe('Some tests for markQueryAsRun', () => {
         };
         global.BSON = { ObjectId: ObjectId };
 
-        // Empty any collections we are using
-        await getQueriesCollection().deleteMany({});
-
         // Truncate all collections in use
-        mongoTester.emptyCollections(['queries']);
+        await mongoTester.emptyCollections(['queries']);
     });
 
     test('Successful mark query as run', async () => {

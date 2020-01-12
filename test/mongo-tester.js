@@ -32,7 +32,7 @@ function MongoTester() {
         };
     };
 
-    this.emptyCollections = function(collections) {
+    this.emptyCollections = async function(collections) {
         // Interesting note - how can I do deleteMany without async, but
         // wait for all promises to finish before the end of emptyCollections?
         collections.forEach(async (collectionName) => {
