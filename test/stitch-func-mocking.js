@@ -6,6 +6,10 @@ function StitchFuncMocking() {
         this.globalMocks[funcName] = func;
     };
 
+    this.clearMocks = function() {
+        this.globalMocks = {};
+    };
+
     this.getFunctionsObject = function(jest) {
         return {
             execute: jest.fn((funcName, ...params) => {

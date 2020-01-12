@@ -17,6 +17,9 @@ describe('Some tests for getNextQuery', () => {
         global.context = {
             services: mongoTester.getStitchContext()
         };
+
+        // Truncate all collections in use
+        mongoTester.emptyCollections(['queries']);
     });
 
     test('shows an empty query set will return nothing', async () => {

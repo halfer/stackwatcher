@@ -10,6 +10,7 @@ describe('Some tests for findAndRunQueries', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        stitchFuncMocking.clearMocks();
     });
 
     test('No queries need to be run', async () => {

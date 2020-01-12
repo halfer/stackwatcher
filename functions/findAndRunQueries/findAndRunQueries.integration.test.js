@@ -29,6 +29,7 @@ describe('Some integration tests for findAndRunQueries', () => {
 
         // Delete existing mocks
         jest.clearAllMocks();
+        stitchFuncMocking.clearMocks();
 
         // Connect some real implementations
         stitchFuncMocking.setGlobalMock('getNextQuery', getNextQuery);

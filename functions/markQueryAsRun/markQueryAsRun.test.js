@@ -22,6 +22,9 @@ describe('Some tests for markQueryAsRun', () => {
 
         // Empty any collections we are using
         await getQueriesCollection().deleteMany({});
+
+        // Truncate all collections in use
+        mongoTester.emptyCollections(['queries']);
     });
 
     test('Successful mark query as run', async () => {
