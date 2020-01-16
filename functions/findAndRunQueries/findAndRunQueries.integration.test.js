@@ -50,7 +50,7 @@ describe('Some integration tests for findAndRunQueries', () => {
     test('end-to-end test with one successful query', async () => {
 
         // Here is a query entry
-        mongoTester.getDatabase().collection('queries').insertOne({
+        await mongoTester.getDatabase().collection('queries').insertOne({
             "user_id": 1,
             "phrase": 'hello',
             "last_run_at": null,
