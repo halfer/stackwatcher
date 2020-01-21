@@ -32,13 +32,19 @@ function MongoTester() {
         };
     };
 
+    /**
+     * Empties all named collections
+     *
+     * @see See https://medium.com/dailyjs/the-pitfalls-of-async-await-in-array-loops-cf9cf713bfeb
+     * @param collections
+     * @returns {Promise<void>}
+     */
     this.emptyCollections = async function(collections) {
-        // Interesting note - how can I do deleteMany without async, but
-        // wait for all promises to finish before the end of emptyCollections?
-        collections.forEach(async (collectionName) => {
-            let collection = this.getDatabase().collection(collectionName);
-            await collection.deleteMany({});
+        const promises = collections.map(async (collectionName, idx) => {
+            await this.getDatabase().collection(collectionName).deleteMany({})
         });
+
+        await Promise.all(promises);
     };
 
     this.getConnection = function() {
