@@ -14,7 +14,7 @@ exports = async function(delay) {
         if (query) {
             ok = context.functions.execute('runQuery', query.phrase, query.user_id);
             if (ok) {
-                context.functions.execute('markQueryAsRun', query._id);
+                await context.functions.execute('markQueryAsRun', query._id);
                 count++;
             }
         } else {
