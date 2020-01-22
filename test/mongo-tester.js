@@ -1,6 +1,6 @@
 const {MongoClient} = require('mongodb');
 
-function MongoTester() {
+function MongoTester(dbSuffix) {
     // Properties
     this.connection = null;
     this.db = null;
@@ -12,7 +12,7 @@ function MongoTester() {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
-        this.db = await this.connection.db(global.__MONGO_DB_NAME__);
+        this.db = await this.connection.db(global.__MONGO_DB_NAME__ + dbSuffix);
     };
 
     this.disconnect = async function() {

@@ -2,7 +2,7 @@ const MongoTester = require('../../test/mongo-tester');
 const getNextQuery = require('./_source');
 
 describe('Some tests for getNextQuery', () => {
-    const mongoTester = new MongoTester();
+    const mongoTester = new MongoTester('getNextQuery');
 
     beforeAll(async () => {
         await mongoTester.connect();

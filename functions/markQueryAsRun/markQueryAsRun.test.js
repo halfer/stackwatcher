@@ -3,7 +3,7 @@ const MongoTester = require('../../test/mongo-tester');
 const markQueryAsRun = require('./_source');
 
 describe('Some tests for markQueryAsRun', () => {
-    const mongoTester = new MongoTester();
+    const mongoTester = new MongoTester('markQueryAsRun');
 
     beforeAll(async () => {
         await mongoTester.connect();

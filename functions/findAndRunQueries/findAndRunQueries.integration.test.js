@@ -10,7 +10,7 @@ const getNextQuery = require('../getNextQuery/_source');
 const markQueryAsRun = require('../markQueryAsRun/_source');
 
 describe('Some integration tests for findAndRunQueries', () => {
-    const mongoTester = new MongoTester();
+    const mongoTester = new MongoTester('findAndRunQueries');
     const stitchFuncMocking = new StitchFuncMocking();
 
     beforeAll(async () => {
