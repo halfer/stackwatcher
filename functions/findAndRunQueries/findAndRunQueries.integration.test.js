@@ -50,7 +50,8 @@ describe('Some integration tests for findAndRunQueries', () => {
     test('end-to-end test with one successful query', async () => {
 
         // Here is a query entry
-        await mongoTester.getDatabase().collection('queries').insertOne({
+        const db = mongoTester.getDatabase();
+        await db.collection('queries').insertOne({
             "user_id": 1,
             "phrase": 'hello',
             "last_run_at": null,
@@ -63,7 +64,10 @@ describe('Some integration tests for findAndRunQueries', () => {
         // Let's see if we can run a call sucessfully
         expect(await findAndRunQueries(0)).toBe(1);
 
-        // @todo Check that a log entry has been made
+        // Check that a log entry has been made
+        const query = await db.collection('queries').findOne({});
+        expect(query.logs.length).toBe(1);
+        expect(query.logs[0].type).toBe('RUN');
     });
 
     test('end-to-end test with one failed query', async () => {
